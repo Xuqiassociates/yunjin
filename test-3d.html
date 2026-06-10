@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yunjin 3D Test</title>
+
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: #f8fafc;
+      font-family: Arial, sans-serif;
+      color: #0f172a;
+    }
+
+    .viewer-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+
+    model-viewer {
+      width: 90vw;
+      height: 75vh;
+      background: #e5e7eb;
+      border-radius: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="viewer-section">
+    <h1>Yunjin 3D Test</h1>
+
+    <model-viewer
+      src="assets/yunjin-dress-test.glb"
+      alt="Yunjin dress 3D model"
+      camera-controls
+      auto-rotate
+      shadow-intensity="1"
+      exposure="1">
+    </model-viewer>
+  </section>
+</body>
+</html>
