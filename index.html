@@ -13,6 +13,19 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --mouse-x: 0px;
+      --mouse-y: 0px;
+      --gold: #d9b36c;
+      --warm-gold: #f2d28b;
+      --silk-red: #7d1f38;
+      --ink: #050609;
+      --paper: #f8f1df;
+      --mist: rgba(248, 241, 223, 0.62);
+      --dim: rgba(248, 241, 223, 0.56);
+      --scroll: 0;
+    }
+
     html {
       scroll-behavior: smooth;
     }
@@ -20,9 +33,9 @@
     body {
       margin: 0;
       min-height: 100vh;
+      background: #050609;
+      color: var(--paper);
       font-family: Georgia, "Times New Roman", serif;
-      color: #f8f1df;
-      background: #05070a;
       overflow-x: hidden;
     }
 
@@ -30,45 +43,133 @@
       content: "";
       position: fixed;
       inset: 0;
+      z-index: -6;
       background:
-        radial-gradient(circle at 18% 22%, rgba(180, 38, 67, 0.24), transparent 28%),
-        radial-gradient(circle at 76% 28%, rgba(214, 173, 88, 0.24), transparent 30%),
-        radial-gradient(circle at 52% 70%, rgba(86, 113, 138, 0.18), transparent 34%),
-        linear-gradient(140deg, #05070a 0%, #0c1017 38%, #160b12 68%, #040507 100%);
-      z-index: -4;
+        radial-gradient(circle at calc(28% + var(--mouse-x)) calc(18% + var(--mouse-y)), rgba(138, 34, 62, 0.28), transparent 30%),
+        radial-gradient(circle at calc(72% - var(--mouse-x)) calc(25% - var(--mouse-y)), rgba(220, 178, 98, 0.24), transparent 34%),
+        radial-gradient(circle at 55% 72%, rgba(72, 93, 112, 0.22), transparent 38%),
+        linear-gradient(135deg, #040508 0%, #0d1119 38%, #1a0d15 70%, #030406 100%);
     }
 
     body::after {
       content: "";
       position: fixed;
       inset: 0;
+      z-index: -5;
+      pointer-events: none;
       background-image:
-        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 80px 80px;
+        linear-gradient(rgba(248, 241, 223, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(248, 241, 223, 0.03) 1px, transparent 1px);
+      background-size: 86px 86px;
       mask-image: radial-gradient(circle at center, black, transparent 78%);
-      z-index: -3;
+      opacity: 0.8;
+    }
+
+    .enter-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(218, 176, 94, 0.22), transparent 24%),
+        radial-gradient(circle at 50% 50%, rgba(122, 31, 58, 0.22), transparent 38%),
+        #030406;
+      transition: opacity 1.1s ease, visibility 1.1s ease;
+    }
+
+    .enter-gate.hidden {
+      opacity: 0;
+      visibility: hidden;
       pointer-events: none;
     }
 
-    .mist {
-      position: fixed;
-      inset: -20%;
-      background:
-        radial-gradient(circle at 30% 40%, rgba(255, 226, 156, 0.12), transparent 28%),
-        radial-gradient(circle at 70% 58%, rgba(165, 45, 75, 0.16), transparent 32%);
-      filter: blur(40px);
-      opacity: 0.8;
-      animation: drift 16s ease-in-out infinite alternate;
-      z-index: -2;
+    .gate-inner {
+      text-align: center;
+      padding: 2rem;
+      animation: gateAppear 1.8s ease both;
     }
 
-    @keyframes drift {
+    @keyframes gateAppear {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .gate-label {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(242, 210, 139, 0.78);
+      margin-bottom: 24px;
+    }
+
+    .gate-title {
+      margin: 0;
+      font-weight: 400;
+      font-size: clamp(3rem, 9vw, 8.5rem);
+      line-height: 0.86;
+      letter-spacing: -0.08em;
+    }
+
+    .gate-button {
+      margin-top: 40px;
+      border: 1px solid rgba(242, 210, 139, 0.48);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--paper);
+      padding: 15px 28px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      backdrop-filter: blur(14px);
+      transition: 0.35s ease;
+    }
+
+    .gate-button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(242, 210, 139, 0.95);
+      background: rgba(242, 210, 139, 0.12);
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      pointer-events: none;
+      opacity: 0.07;
+      background-image:
+        repeating-radial-gradient(circle at 30% 40%, rgba(255,255,255,0.75) 0 1px, transparent 1px 5px);
+      mix-blend-mode: screen;
+    }
+
+    .ambient-mist {
+      position: fixed;
+      inset: -22%;
+      z-index: -4;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 36%, rgba(242, 210, 139, 0.13), transparent 28%),
+        radial-gradient(circle at 75% 58%, rgba(126, 31, 56, 0.20), transparent 34%),
+        radial-gradient(circle at 48% 46%, rgba(248, 241, 223, 0.08), transparent 32%);
+      filter: blur(42px);
+      animation: mistDrift 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes mistDrift {
       from {
         transform: translate3d(-2%, -1%, 0) scale(1);
       }
       to {
-        transform: translate3d(2%, 2%, 0) scale(1.05);
+        transform: translate3d(2%, 2%, 0) scale(1.06);
       }
     }
 
@@ -77,22 +178,51 @@
       top: 0;
       left: 0;
       width: 100%;
-      padding: 28px 5vw;
+      z-index: 30;
+      padding: 26px 5vw;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 20;
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
       color: rgba(248, 241, 223, 0.78);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      mix-blend-mode: screen;
     }
 
     .site-header a {
       color: rgba(248, 241, 223, 0.72);
       text-decoration: none;
       margin-left: 28px;
+      transition: color 0.25s ease;
+    }
+
+    .site-header a:hover {
+      color: var(--warm-gold);
+    }
+
+    .scroll-indicator {
+      position: fixed;
+      right: 32px;
+      top: 50%;
+      z-index: 30;
+      transform: translateY(-50%);
+      height: 160px;
+      width: 1px;
+      background: rgba(248, 241, 223, 0.14);
+      overflow: hidden;
+    }
+
+    .scroll-indicator span {
+      display: block;
+      width: 100%;
+      height: calc(var(--scroll) * 100%);
+      background: linear-gradient(to bottom, var(--warm-gold), rgba(248, 241, 223, 0.12));
+    }
+
+    main {
+      position: relative;
     }
 
     .hero {
@@ -101,112 +231,140 @@
       display: grid;
       grid-template-columns: 0.92fr 1.08fr;
       align-items: center;
-      padding: 7rem 5vw 4rem;
+      padding: 7.5rem 5vw 5rem;
       overflow: hidden;
     }
 
     .hero-copy {
       position: relative;
-      z-index: 4;
+      z-index: 8;
       max-width: 620px;
+      transform: translate3d(calc(var(--mouse-x) * -0.18), calc(var(--mouse-y) * -0.18), 0);
+      transition: transform 0.25s ease-out;
     }
 
     .artifact-index {
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 12px;
-      letter-spacing: 0.22em;
+      font-size: 11px;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
-      color: rgba(222, 180, 92, 0.86);
-      margin-bottom: 28px;
+      color: rgba(242, 210, 139, 0.88);
+      margin-bottom: 26px;
+      opacity: 0;
+      animation: fadeRise 1.2s ease 0.25s both;
     }
 
     h1 {
       margin: 0;
       font-weight: 400;
-      font-size: clamp(4rem, 9vw, 10rem);
+      font-size: clamp(4rem, 9vw, 10.5rem);
       line-height: 0.82;
-      letter-spacing: -0.08em;
+      letter-spacing: -0.085em;
+      opacity: 0;
+      animation: fadeRise 1.35s ease 0.45s both;
     }
 
     .title-sub {
       display: block;
-      margin-top: 18px;
-      font-size: clamp(1.15rem, 2vw, 2rem);
-      line-height: 1.4;
+      margin-top: 22px;
+      font-size: clamp(1.1rem, 2vw, 2rem);
+      line-height: 1.35;
       letter-spacing: 0.02em;
-      color: rgba(248, 241, 223, 0.68);
+      color: rgba(248, 241, 223, 0.66);
       font-style: italic;
     }
 
     .intro {
       margin-top: 34px;
-      max-width: 460px;
+      max-width: 480px;
       font-family: Arial, Helvetica, sans-serif;
       font-size: 15px;
       line-height: 1.9;
-      color: rgba(248, 241, 223, 0.68);
+      color: rgba(248, 241, 223, 0.66);
+      opacity: 0;
+      animation: fadeRise 1.2s ease 0.75s both;
+    }
+
+    @keyframes fadeRise {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .enter-row {
       margin-top: 42px;
       display: flex;
       gap: 18px;
-      flex-wrap: wrap;
       align-items: center;
+      flex-wrap: wrap;
       font-family: Arial, Helvetica, sans-serif;
+      opacity: 0;
+      animation: fadeRise 1.2s ease 1s both;
     }
 
     .enter-button {
-      position: relative;
       display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 13px;
       padding: 15px 24px;
-      border: 1px solid rgba(222, 180, 92, 0.55);
+      border: 1px solid rgba(242, 210, 139, 0.5);
       border-radius: 999px;
-      color: #f8f1df;
+      color: var(--paper);
       text-decoration: none;
-      font-size: 13px;
-      letter-spacing: 0.08em;
+      font-size: 12px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       background: rgba(255, 255, 255, 0.035);
       backdrop-filter: blur(14px);
       transition: 0.35s ease;
     }
 
+    .enter-button::after {
+      content: "→";
+      font-size: 14px;
+      transform: translateY(-1px);
+    }
+
     .enter-button:hover {
-      border-color: rgba(255, 224, 148, 0.95);
-      background: rgba(222, 180, 92, 0.13);
+      border-color: rgba(242, 210, 139, 0.9);
+      background: rgba(242, 210, 139, 0.12);
       transform: translateY(-2px);
     }
 
     .small-note {
+      color: rgba(248, 241, 223, 0.42);
       font-size: 12px;
-      color: rgba(248, 241, 223, 0.46);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
     }
 
     .model-stage {
       position: relative;
-      height: 82vh;
+      z-index: 5;
+      height: 84vh;
       min-height: 560px;
-      z-index: 3;
+      transform: translate3d(calc(var(--mouse-x) * 0.12), calc(var(--mouse-y) * 0.12), 0);
+      transition: transform 0.25s ease-out;
     }
 
     .halo {
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 58vh;
-      height: 58vh;
+      width: min(62vh, 560px);
+      height: min(62vh, 560px);
       transform: translate(-50%, -50%);
       border-radius: 50%;
       background:
-        radial-gradient(circle, rgba(224, 184, 92, 0.18), transparent 56%),
-        conic-gradient(from 180deg, transparent, rgba(212, 170, 83, 0.24), transparent, rgba(138, 31, 56, 0.20), transparent);
-      filter: blur(2px);
-      animation: rotateHalo 24s linear infinite;
-      opacity: 0.9;
+        radial-gradient(circle, rgba(242, 210, 139, 0.16), transparent 58%),
+        conic-gradient(from 180deg, transparent, rgba(242, 210, 139, 0.26), transparent, rgba(126, 31, 56, 0.26), transparent);
+      filter: blur(3px);
+      animation: rotateHalo 28s linear infinite;
+      opacity: 0.92;
     }
 
     @keyframes rotateHalo {
@@ -220,153 +378,383 @@
 
     model-viewer {
       position: relative;
-      z-index: 4;
+      z-index: 6;
       width: 100%;
       height: 100%;
       background: transparent;
       --poster-color: transparent;
-      filter: drop-shadow(0 34px 54px rgba(0, 0, 0, 0.58));
+      filter: drop-shadow(0 36px 62px rgba(0, 0, 0, 0.68));
+      opacity: 0;
+      animation: modelReveal 1.6s ease 0.95s both;
+    }
+
+    @keyframes modelReveal {
+      from {
+        opacity: 0;
+        filter: blur(12px) drop-shadow(0 36px 62px rgba(0, 0, 0, 0.68));
+        transform: translateY(16px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        filter: blur(0) drop-shadow(0 36px 62px rgba(0, 0, 0, 0.68));
+        transform: translateY(0) scale(1);
+      }
     }
 
     .silk-line {
       position: absolute;
       height: 1px;
-      width: 62vw;
-      background: linear-gradient(90deg, transparent, rgba(236, 202, 124, 0.72), transparent);
+      width: 72vw;
+      background: linear-gradient(90deg, transparent, rgba(242, 210, 139, 0.82), rgba(248, 241, 223, 0.32), transparent);
       transform-origin: center;
       opacity: 0.45;
       z-index: 2;
-      animation: shimmer 6s ease-in-out infinite alternate;
+      animation: shimmer 5.5s ease-in-out infinite alternate;
+    }
+
+    .silk-line::after {
+      content: "";
+      position: absolute;
+      right: 20%;
+      top: -3px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(242, 210, 139, 0.9);
+      box-shadow: 0 0 18px rgba(242, 210, 139, 0.9);
     }
 
     .silk-line.one {
-      top: 24%;
-      right: -14%;
-      transform: rotate(-18deg);
+      top: 22%;
+      right: -22%;
+      transform: rotate(-18deg) translateX(calc(var(--mouse-x) * 0.7));
     }
 
     .silk-line.two {
-      top: 48%;
-      right: -20%;
-      transform: rotate(9deg);
-      animation-delay: 1.2s;
+      top: 45%;
+      right: -25%;
+      transform: rotate(8deg) translateX(calc(var(--mouse-x) * -0.45));
+      animation-delay: 1.1s;
     }
 
     .silk-line.three {
-      top: 69%;
-      right: -10%;
-      transform: rotate(-8deg);
-      animation-delay: 2.1s;
+      top: 68%;
+      right: -18%;
+      transform: rotate(-7deg) translateX(calc(var(--mouse-x) * 0.38));
+      animation-delay: 2.2s;
+    }
+
+    .silk-line.four {
+      top: 82%;
+      right: -30%;
+      transform: rotate(14deg) translateX(calc(var(--mouse-x) * -0.6));
+      animation-delay: 3s;
+      opacity: 0.28;
     }
 
     @keyframes shimmer {
       from {
-        opacity: 0.18;
+        opacity: 0.16;
         filter: blur(0px);
       }
       to {
-        opacity: 0.72;
-        filter: blur(1.6px);
+        opacity: 0.82;
+        filter: blur(1.5px);
       }
     }
 
-    .floating-card {
+    .hotspot-panel {
       position: absolute;
       right: 2vw;
-      bottom: 7vh;
-      width: 260px;
+      bottom: 6vh;
+      width: 290px;
+      z-index: 9;
       padding: 18px 18px 16px;
-      border: 1px solid rgba(248, 241, 223, 0.14);
-      background: rgba(5, 7, 10, 0.42);
-      backdrop-filter: blur(18px);
-      z-index: 6;
+      border: 1px solid rgba(248, 241, 223, 0.16);
+      background: rgba(5, 6, 9, 0.48);
+      backdrop-filter: blur(20px);
       font-family: Arial, Helvetica, sans-serif;
       color: rgba(248, 241, 223, 0.68);
       font-size: 12px;
-      line-height: 1.7;
+      line-height: 1.72;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      opacity: 0;
+      animation: fadeRise 1.2s ease 1.35s both;
     }
 
-    .floating-card strong {
+    .hotspot-panel strong {
       display: block;
-      color: rgba(248, 241, 223, 0.92);
+      color: rgba(248, 241, 223, 0.94);
       font-size: 13px;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 8px;
     }
 
-    .below {
+    .hotspot-buttons {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hotspot-buttons button {
+      border: 1px solid rgba(242, 210, 139, 0.28);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(248, 241, 223, 0.66);
+      border-radius: 999px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: 0.25s ease;
+    }
+
+    .hotspot-buttons button:hover,
+    .hotspot-buttons button.active {
+      border-color: rgba(242, 210, 139, 0.8);
+      color: var(--warm-gold);
+      background: rgba(242, 210, 139, 0.1);
+    }
+
+    .floating-label {
+      position: absolute;
+      z-index: 7;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(242, 210, 139, 0.78);
+      pointer-events: none;
+      opacity: 0.72;
+    }
+
+    .floating-label::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      height: 1px;
+      width: 88px;
+      background: linear-gradient(90deg, rgba(242, 210, 139, 0.64), transparent);
+    }
+
+    .floating-label.a {
+      top: 28%;
+      left: 5%;
+    }
+
+    .floating-label.a::before {
+      left: 104%;
+    }
+
+    .floating-label.b {
+      bottom: 31%;
+      right: 9%;
+    }
+
+    .floating-label.b::before {
+      right: 104%;
+      background: linear-gradient(270deg, rgba(242, 210, 139, 0.64), transparent);
+    }
+
+    .chapter {
       position: relative;
-      padding: 7rem 5vw;
+      min-height: 92vh;
+      padding: 8rem 5vw;
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 4rem;
+      align-items: center;
       border-top: 1px solid rgba(248, 241, 223, 0.1);
       background:
-        linear-gradient(180deg, rgba(5,7,10,0), rgba(5,7,10,0.78)),
+        linear-gradient(180deg, rgba(5,6,9,0.12), rgba(5,6,9,0.78)),
         rgba(255,255,255,0.025);
+      overflow: hidden;
     }
 
-    .below-grid {
-      display: grid;
-      grid-template-columns: 0.8fr 1.2fr;
-      gap: 4rem;
-      max-width: 1180px;
-      margin: 0 auto;
+    .chapter::before {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border: 1px solid rgba(242, 210, 139, 0.08);
+      transform: rotate(-3deg);
+      pointer-events: none;
     }
 
-    .below h2 {
+    .chapter h2 {
       margin: 0;
       font-weight: 400;
-      font-size: clamp(2.4rem, 5vw, 5.6rem);
-      line-height: 0.95;
-      letter-spacing: -0.06em;
+      font-size: clamp(2.7rem, 5.6vw, 6.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.065em;
     }
 
-    .below p {
-      margin: 0;
+    .chapter-copy {
+      position: relative;
+      z-index: 3;
+      max-width: 680px;
       font-family: Arial, Helvetica, sans-serif;
-      color: rgba(248, 241, 223, 0.64);
+      color: rgba(248, 241, 223, 0.66);
       font-size: 15px;
       line-height: 1.9;
-      max-width: 620px;
+    }
+
+    .chapter-copy p {
+      margin: 0 0 22px;
     }
 
     .process-tags {
-      margin-top: 28px;
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 28px;
     }
 
     .process-tags span {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 8px 12px;
       border: 1px solid rgba(248, 241, 223, 0.16);
       color: rgba(248, 241, 223, 0.62);
       border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    @media (max-width: 900px) {
-      .site-header {
-        position: absolute;
-      }
+    .archive {
+      position: relative;
+      padding: 7rem 5vw 8rem;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(126, 31, 56, 0.16), transparent 30%),
+        radial-gradient(circle at 80% 18%, rgba(242, 210, 139, 0.13), transparent 30%),
+        #050609;
+      border-top: 1px solid rgba(248, 241, 223, 0.1);
+    }
 
+    .archive-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 2rem;
+      margin-bottom: 36px;
+    }
+
+    .archive h2 {
+      margin: 0;
+      font-weight: 400;
+      font-size: clamp(2.5rem, 5vw, 5.8rem);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
+    }
+
+    .archive-note {
+      max-width: 420px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgba(248, 241, 223, 0.55);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .archive-card {
+      min-height: 260px;
+      position: relative;
+      border: 1px solid rgba(248, 241, 223, 0.13);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015)),
+        rgba(5,6,9,0.4);
+      overflow: hidden;
+      padding: 18px;
+      font-family: Arial, Helvetica, sans-serif;
+      transition: 0.35s ease;
+    }
+
+    .archive-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(242, 210, 139, 0.54);
+      background:
+        linear-gradient(145deg, rgba(242,210,139,0.12), rgba(255,255,255,0.02)),
+        rgba(5,6,9,0.55);
+    }
+
+    .archive-card::before {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border: 1px solid rgba(242, 210, 139, 0.1);
+      transform: rotate(-4deg);
+    }
+
+    .archive-card .number {
+      color: rgba(242, 210, 139, 0.78);
+      letter-spacing: 0.18em;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .archive-card h3 {
+      position: absolute;
+      left: 18px;
+      bottom: 44px;
+      right: 18px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+      font-size: 28px;
+      letter-spacing: -0.04em;
+    }
+
+    .archive-card p {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      right: 18px;
+      margin: 0;
+      color: rgba(248, 241, 223, 0.48);
+      font-size: 12px;
+    }
+
+    .archive-card .orb {
+      position: absolute;
+      right: -24px;
+      top: 38px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(242, 210, 139, 0.22), transparent 62%);
+      filter: blur(2px);
+    }
+
+    @media (max-width: 960px) {
       .site-header nav {
         display: none;
       }
 
-      .hero {
+      .scroll-indicator {
+        display: none;
+      }
+
+      .hero,
+      .chapter {
         grid-template-columns: 1fr;
+      }
+
+      .hero {
         padding-top: 7rem;
       }
 
       .model-stage {
-        height: 64vh;
-        min-height: 460px;
+        height: 66vh;
+        min-height: 440px;
       }
 
-      .floating-card {
+      .hotspot-panel {
         position: relative;
         right: auto;
         bottom: auto;
@@ -374,7 +762,19 @@
         margin-top: -30px;
       }
 
-      .below-grid {
+      .floating-label {
+        display: none;
+      }
+
+      .archive-top {
+        display: block;
+      }
+
+      .archive-note {
+        margin-top: 20px;
+      }
+
+      .archive-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -382,16 +782,29 @@
 </head>
 
 <body>
-  <div class="mist"></div>
+  <div class="enter-gate" id="enterGate">
+    <div class="gate-inner">
+      <div class="gate-label">A digital textile threshold</div>
+      <h1 class="gate-title">Yunjin<br>Reverie</h1>
+      <button class="gate-button" id="enterButton">Enter the Loom</button>
+    </div>
+  </div>
+
+  <div class="grain"></div>
+  <div class="ambient-mist"></div>
 
   <header class="site-header">
     <div>Yunjin Reverie</div>
     <nav>
       <a href="#museum">Museum</a>
-      <a href="#process">Process</a>
+      <a href="#memory">Memory</a>
       <a href="#archive">Archive</a>
     </nav>
   </header>
+
+  <div class="scroll-indicator">
+    <span></span>
+  </div>
 
   <main>
     <section class="hero" id="museum">
@@ -411,60 +824,183 @@
         </p>
 
         <div class="enter-row">
-          <a href="#process" class="enter-button">Enter the loom</a>
+          <a href="#memory" class="enter-button">Approach the artifact</a>
           <span class="small-note">CLO3D · Blender · Substance · Web archive</span>
         </div>
       </div>
 
       <div class="model-stage">
         <div class="halo"></div>
+
         <div class="silk-line one"></div>
         <div class="silk-line two"></div>
         <div class="silk-line three"></div>
+        <div class="silk-line four"></div>
+
+        <div class="floating-label a">warp thread</div>
+        <div class="floating-label b">material apparition</div>
 
         <model-viewer
+          id="dressModel"
           src="assets/yunjin-dress-test.gltf"
           alt="Yunjin digital garment"
           camera-controls
           auto-rotate
-          auto-rotate-delay="800"
-          rotation-per-second="16deg"
+          auto-rotate-delay="700"
+          rotation-per-second="13deg"
           shadow-intensity="1"
-          exposure="1.08"
+          exposure="1.12"
           camera-orbit="0deg 75deg 2.7m"
           interaction-prompt="auto">
         </model-viewer>
 
-        <div class="floating-card">
-          <strong>Material Memory</strong>
-          This garment is translated from a simulated textile surface into a web-based
-          3D object, allowing Yunjin to be encountered as both fabric and apparition.
-        </div>
-      </div>
-    </section>
+        <div class="hotspot-panel">
+          <strong id="panelTitle">Material Memory</strong>
+          <span id="panelText">
+            This garment is translated from a simulated textile surface into a web-based
+            3D object, allowing Yunjin to be encountered as both fabric and apparition.
+          </span>
 
-    <section class="below" id="process">
-      <div class="below-grid">
-        <h2>The loom becomes a portal.</h2>
-
-        <div>
-          <p>
-            This project reimagines Yunjin not as a static historical object, but as a
-            living digital material. Through CLO3D, Blender and Substance-based texture
-            development, traditional brocade aesthetics are transformed into an interactive
-            spatial experience.
-          </p>
-
-          <div class="process-tags">
-            <span>CLO3D garment</span>
-            <span>Blender refinement</span>
-            <span>Substance material</span>
-            <span>Digital heritage</span>
-            <span>Virtual textile archive</span>
+          <div class="hotspot-buttons">
+            <button class="active" data-view="memory">Memory</button>
+            <button data-view="surface">Surface</button>
+            <button data-view="drape">Drape</button>
+            <button data-view="archive">Archive</button>
           </div>
         </div>
       </div>
     </section>
+
+    <section class="chapter" id="memory">
+      <h2>The loom becomes a portal.</h2>
+
+      <div class="chapter-copy">
+        <p>
+          This project reimagines Yunjin not as a static historical object, but as a living
+          digital material. The garment acts as a threshold: a soft artifact suspended between
+          craft, simulation and memory.
+        </p>
+
+        <p>
+          Instead of presenting textile heritage as a flat image, the work asks how brocade can
+          be encountered spatially — through light, movement, digital cloth and a changing point
+          of view.
+        </p>
+
+        <div class="process-tags">
+          <span>CLO3D garment</span>
+          <span>Blender refinement</span>
+          <span>Substance material</span>
+          <span>Digital heritage</span>
+          <span>Virtual textile archive</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="archive" id="archive">
+      <div class="archive-top">
+        <h2>Weaving the Archive</h2>
+
+        <div class="archive-note">
+          Future objects can appear here as floating textile entries: fabric samples,
+          pattern studies, digital garments, process fragments and reconstructed surfaces.
+        </div>
+      </div>
+
+      <div class="archive-grid">
+        <article class="archive-card">
+          <div class="orb"></div>
+          <div class="number">Object 001</div>
+          <h3>Brocade Garment</h3>
+          <p>3D simulated textile artifact</p>
+        </article>
+
+        <article class="archive-card">
+          <div class="orb"></div>
+          <div class="number">Object 002</div>
+          <h3>Pattern Memory</h3>
+          <p>Digital motif reconstruction</p>
+        </article>
+
+        <article class="archive-card">
+          <div class="orb"></div>
+          <div class="number">Object 003</div>
+          <h3>Material Surface</h3>
+          <p>Substance-based fabric study</p>
+        </article>
+      </div>
+    </section>
   </main>
+
+  <script>
+    const root = document.documentElement;
+    const gate = document.getElementById("enterGate");
+    const enterButton = document.getElementById("enterButton");
+    const model = document.getElementById("dressModel");
+    const panelTitle = document.getElementById("panelTitle");
+    const panelText = document.getElementById("panelText");
+    const buttons = document.querySelectorAll(".hotspot-buttons button");
+
+    enterButton.addEventListener("click", () => {
+      gate.classList.add("hidden");
+    });
+
+    window.addEventListener("mousemove", (event) => {
+      const x = (event.clientX / window.innerWidth - 0.5) * 24;
+      const y = (event.clientY / window.innerHeight - 0.5) * 24;
+
+      root.style.setProperty("--mouse-x", `${x}px`);
+      root.style.setProperty("--mouse-y", `${y}px`);
+    });
+
+    window.addEventListener("scroll", () => {
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      const progress = Math.min(window.scrollY / maxScroll, 1);
+      root.style.setProperty("--scroll", progress);
+
+      if (!model) return;
+
+      if (window.scrollY < window.innerHeight * 0.75) {
+        model.setAttribute("camera-orbit", `${progress * 80}deg 75deg ${2.7 - progress * 0.45}m`);
+      }
+    });
+
+    const views = {
+      memory: {
+        title: "Material Memory",
+        text: "This garment is translated from a simulated textile surface into a web-based 3D object, allowing Yunjin to be encountered as both fabric and apparition.",
+        orbit: "0deg 75deg 2.7m"
+      },
+      surface: {
+        title: "Surface as Image",
+        text: "The brocade surface becomes a luminous digital skin. Pattern, colour and woven density are read not only as decoration, but as cultural data.",
+        orbit: "35deg 70deg 2.45m"
+      },
+      drape: {
+        title: "Simulated Drape",
+        text: "CLO3D allows the textile to fall, fold and hold volume. The garment becomes a moving study of softness, gravity and ceremonial silhouette.",
+        orbit: "-40deg 78deg 2.55m"
+      },
+      archive: {
+        title: "Archive Object",
+        text: "As a web object, the garment enters a new archive: light, code and material memory held together inside the browser.",
+        orbit: "80deg 72deg 2.85m"
+      }
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        buttons.forEach((b) => b.classList.remove("active"));
+        button.classList.add("active");
+
+        const view = views[button.dataset.view];
+
+        panelTitle.textContent = view.title;
+        panelText.textContent = view.text;
+
+        model.setAttribute("camera-orbit", view.orbit);
+      });
+    });
+  </script>
 </body>
 </html>
