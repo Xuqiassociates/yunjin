@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Yunjin Reverie | Digital Textile Archive</title>
+  <title>Yunjin Reverie | A Fleeting Illusion</title>
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
@@ -13,14 +13,63 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #f8fafc;
-      background:
-        radial-gradient(circle at 70% 30%, rgba(180, 145, 90, 0.22), transparent 35%),
-        linear-gradient(135deg, #101820 0%, #18232c 45%, #0b1117 100%);
       min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      color: #f8f1df;
+      background: #05070a;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(180, 38, 67, 0.24), transparent 28%),
+        radial-gradient(circle at 76% 28%, rgba(214, 173, 88, 0.24), transparent 30%),
+        radial-gradient(circle at 52% 70%, rgba(86, 113, 138, 0.18), transparent 34%),
+        linear-gradient(140deg, #05070a 0%, #0c1017 38%, #160b12 68%, #040507 100%);
+      z-index: -4;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(circle at center, black, transparent 78%);
+      z-index: -3;
+      pointer-events: none;
+    }
+
+    .mist {
+      position: fixed;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255, 226, 156, 0.12), transparent 28%),
+        radial-gradient(circle at 70% 58%, rgba(165, 45, 75, 0.16), transparent 32%);
+      filter: blur(40px);
+      opacity: 0.8;
+      animation: drift 16s ease-in-out infinite alternate;
+      z-index: -2;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translate3d(-2%, -1%, 0) scale(1);
+      }
+      to {
+        transform: translate3d(2%, 2%, 0) scale(1.05);
+      }
     }
 
     .site-header {
@@ -28,134 +77,274 @@
       top: 0;
       left: 0;
       width: 100%;
-      padding: 28px 6vw;
+      padding: 28px 5vw;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 10;
-      color: rgba(248, 250, 252, 0.86);
-      font-size: 13px;
-      letter-spacing: 0.08em;
+      z-index: 20;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+      color: rgba(248, 241, 223, 0.78);
     }
 
-    .logo {
-      font-weight: 500;
-    }
-
-    .nav {
-      display: flex;
-      gap: 28px;
-    }
-
-    .nav a {
-      color: rgba(248, 250, 252, 0.76);
+    .site-header a {
+      color: rgba(248, 241, 223, 0.72);
       text-decoration: none;
+      margin-left: 28px;
     }
 
     .hero {
       min-height: 100vh;
+      position: relative;
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
+      grid-template-columns: 0.92fr 1.08fr;
       align-items: center;
-      gap: 3rem;
-      padding: 8rem 6vw 4rem;
+      padding: 7rem 5vw 4rem;
+      overflow: hidden;
     }
 
-    .hero-text {
-      max-width: 520px;
-      z-index: 2;
+    .hero-copy {
+      position: relative;
+      z-index: 4;
+      max-width: 620px;
     }
 
-    .eyebrow {
-      font-size: 13px;
-      letter-spacing: 0.16em;
+    .artifact-index {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(226, 214, 181, 0.85);
-      margin-bottom: 24px;
+      color: rgba(222, 180, 92, 0.86);
+      margin-bottom: 28px;
     }
 
     h1 {
-      font-size: clamp(3rem, 7vw, 7.5rem);
-      line-height: 0.95;
+      margin: 0;
       font-weight: 400;
-      margin: 0 0 28px;
-      letter-spacing: -0.06em;
+      font-size: clamp(4rem, 9vw, 10rem);
+      line-height: 0.82;
+      letter-spacing: -0.08em;
     }
 
-    .subtitle {
-      font-size: clamp(1rem, 1.4vw, 1.25rem);
-      line-height: 1.8;
-      color: rgba(248, 250, 252, 0.72);
+    .title-sub {
+      display: block;
+      margin-top: 18px;
+      font-size: clamp(1.15rem, 2vw, 2rem);
+      line-height: 1.4;
+      letter-spacing: 0.02em;
+      color: rgba(248, 241, 223, 0.68);
+      font-style: italic;
+    }
+
+    .intro {
+      margin-top: 34px;
       max-width: 460px;
-      margin-bottom: 36px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      line-height: 1.9;
+      color: rgba(248, 241, 223, 0.68);
     }
 
-    .button-row {
+    .enter-row {
+      margin-top: 42px;
       display: flex;
-      gap: 16px;
+      gap: 18px;
       flex-wrap: wrap;
+      align-items: center;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    .button {
-      display: inline-block;
-      padding: 14px 22px;
-      border: 1px solid rgba(226, 214, 181, 0.45);
-      border-radius: 999px;
-      color: #f8fafc;
-      text-decoration: none;
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      transition: 0.3s ease;
-    }
-
-    .button:hover {
-      background: rgba(226, 214, 181, 0.12);
-      border-color: rgba(226, 214, 181, 0.8);
-    }
-
-    .model-wrap {
-      width: 100%;
-      height: 78vh;
-      min-height: 520px;
+    .enter-button {
       position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 24px;
+      border: 1px solid rgba(222, 180, 92, 0.55);
+      border-radius: 999px;
+      color: #f8f1df;
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(14px);
+      transition: 0.35s ease;
+    }
+
+    .enter-button:hover {
+      border-color: rgba(255, 224, 148, 0.95);
+      background: rgba(222, 180, 92, 0.13);
+      transform: translateY(-2px);
+    }
+
+    .small-note {
+      font-size: 12px;
+      color: rgba(248, 241, 223, 0.46);
+      letter-spacing: 0.04em;
+    }
+
+    .model-stage {
+      position: relative;
+      height: 82vh;
+      min-height: 560px;
+      z-index: 3;
+    }
+
+    .halo {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 58vh;
+      height: 58vh;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(224, 184, 92, 0.18), transparent 56%),
+        conic-gradient(from 180deg, transparent, rgba(212, 170, 83, 0.24), transparent, rgba(138, 31, 56, 0.20), transparent);
+      filter: blur(2px);
+      animation: rotateHalo 24s linear infinite;
+      opacity: 0.9;
+    }
+
+    @keyframes rotateHalo {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
     }
 
     model-viewer {
+      position: relative;
+      z-index: 4;
       width: 100%;
       height: 100%;
       background: transparent;
       --poster-color: transparent;
+      filter: drop-shadow(0 34px 54px rgba(0, 0, 0, 0.58));
     }
 
-    .caption {
+    .silk-line {
       position: absolute;
-      right: 0;
-      bottom: 24px;
-      max-width: 260px;
-      font-size: 13px;
+      height: 1px;
+      width: 62vw;
+      background: linear-gradient(90deg, transparent, rgba(236, 202, 124, 0.72), transparent);
+      transform-origin: center;
+      opacity: 0.45;
+      z-index: 2;
+      animation: shimmer 6s ease-in-out infinite alternate;
+    }
+
+    .silk-line.one {
+      top: 24%;
+      right: -14%;
+      transform: rotate(-18deg);
+    }
+
+    .silk-line.two {
+      top: 48%;
+      right: -20%;
+      transform: rotate(9deg);
+      animation-delay: 1.2s;
+    }
+
+    .silk-line.three {
+      top: 69%;
+      right: -10%;
+      transform: rotate(-8deg);
+      animation-delay: 2.1s;
+    }
+
+    @keyframes shimmer {
+      from {
+        opacity: 0.18;
+        filter: blur(0px);
+      }
+      to {
+        opacity: 0.72;
+        filter: blur(1.6px);
+      }
+    }
+
+    .floating-card {
+      position: absolute;
+      right: 2vw;
+      bottom: 7vh;
+      width: 260px;
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(248, 241, 223, 0.14);
+      background: rgba(5, 7, 10, 0.42);
+      backdrop-filter: blur(18px);
+      z-index: 6;
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgba(248, 241, 223, 0.68);
+      font-size: 12px;
       line-height: 1.7;
-      color: rgba(248, 250, 252, 0.56);
     }
 
-    .archive-preview {
-      padding: 5rem 6vw 7rem;
-      background: rgba(248, 250, 252, 0.04);
-      border-top: 1px solid rgba(248, 250, 252, 0.08);
+    .floating-card strong {
+      display: block;
+      color: rgba(248, 241, 223, 0.92);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
-    .archive-preview h2 {
-      font-size: clamp(2rem, 4vw, 4rem);
+    .below {
+      position: relative;
+      padding: 7rem 5vw;
+      border-top: 1px solid rgba(248, 241, 223, 0.1);
+      background:
+        linear-gradient(180deg, rgba(5,7,10,0), rgba(5,7,10,0.78)),
+        rgba(255,255,255,0.025);
+    }
+
+    .below-grid {
+      display: grid;
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 4rem;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .below h2 {
+      margin: 0;
       font-weight: 400;
-      letter-spacing: -0.04em;
-      margin: 0 0 20px;
+      font-size: clamp(2.4rem, 5vw, 5.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
     }
 
-    .archive-preview p {
-      max-width: 680px;
-      color: rgba(248, 250, 252, 0.68);
-      line-height: 1.8;
-      font-size: 16px;
+    .below p {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgba(248, 241, 223, 0.64);
+      font-size: 15px;
+      line-height: 1.9;
+      max-width: 620px;
+    }
+
+    .process-tags {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .process-tags span {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border: 1px solid rgba(248, 241, 223, 0.16);
+      color: rgba(248, 241, 223, 0.62);
+      border-radius: 999px;
     }
 
     @media (max-width: 900px) {
@@ -163,7 +352,7 @@
         position: absolute;
       }
 
-      .nav {
+      .site-header nav {
         display: none;
       }
 
@@ -172,79 +361,109 @@
         padding-top: 7rem;
       }
 
-      .model-wrap {
-        height: 60vh;
-        min-height: 420px;
+      .model-stage {
+        height: 64vh;
+        min-height: 460px;
       }
 
-      .caption {
-        position: static;
-        margin-top: 16px;
+      .floating-card {
+        position: relative;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        margin-top: -30px;
+      }
+
+      .below-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 
 <body>
-  <header class="site-header">
-    <div class="logo">Yunjin Reverie</div>
+  <div class="mist"></div>
 
-    <nav class="nav">
-      <a href="#archive">Archive</a>
+  <header class="site-header">
+    <div>Yunjin Reverie</div>
+    <nav>
+      <a href="#museum">Museum</a>
       <a href="#process">Process</a>
-      <a href="#about">About</a>
+      <a href="#archive">Archive</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="hero-text">
-        <div class="eyebrow">Digital Textile Museum</div>
+    <section class="hero" id="museum">
+      <div class="hero-copy">
+        <div class="artifact-index">Artifact 001 · Digital Brocade Garment</div>
 
-        <h1>Yunjin Reverie</h1>
+        <h1>
+          Yunjin<br>
+          Reverie
+          <span class="title-sub">A Fleeting Illusion</span>
+        </h1>
 
-        <p class="subtitle">
-          A digital exploration of Nanjing Yunjin brocade, reimagining traditional textile heritage through CLO3D, Blender and material-based digital reconstruction.
+        <p class="intro">
+          A speculative digital museum of Nanjing Yunjin brocade, where textile memory,
+          3D garment simulation and material reconstruction drift between cultural archive
+          and imagined space.
         </p>
 
-        <div class="button-row">
-          <a href="#archive" class="button">Explore Archive</a>
-          <a href="#process" class="button">View Process</a>
+        <div class="enter-row">
+          <a href="#process" class="enter-button">Enter the loom</a>
+          <span class="small-note">CLO3D · Blender · Substance · Web archive</span>
         </div>
       </div>
 
-      <div class="model-wrap">
+      <div class="model-stage">
+        <div class="halo"></div>
+        <div class="silk-line one"></div>
+        <div class="silk-line two"></div>
+        <div class="silk-line three"></div>
+
         <model-viewer
           src="assets/yunjin-dress-test.gltf"
           alt="Yunjin digital garment"
           camera-controls
           auto-rotate
-          auto-rotate-delay="1000"
-          rotation-per-second="20deg"
+          auto-rotate-delay="800"
+          rotation-per-second="16deg"
           shadow-intensity="1"
-          exposure="1"
-          camera-orbit="0deg 75deg 2.6m"
+          exposure="1.08"
+          camera-orbit="0deg 75deg 2.7m"
           interaction-prompt="auto">
         </model-viewer>
 
-        <div class="caption">
-          3D garment test generated from CLO3D and refined through Blender for web-based textile presentation.
+        <div class="floating-card">
+          <strong>Material Memory</strong>
+          This garment is translated from a simulated textile surface into a web-based
+          3D object, allowing Yunjin to be encountered as both fabric and apparition.
         </div>
       </div>
     </section>
 
-    <section class="archive-preview" id="archive">
-      <h2>Digital Textile Archive</h2>
-      <p>
-        This section will later become a searchable archive of Yunjin-inspired digital fabrics, including pattern studies, material experiments, 3D garments and process documentation.
-      </p>
-    </section>
+    <section class="below" id="process">
+      <div class="below-grid">
+        <h2>The loom becomes a portal.</h2>
 
-    <section class="archive-preview" id="process">
-      <h2>Process</h2>
-      <p>
-        The project workflow combines CLO3D garment simulation, Blender model preparation, and Substance-based material development to translate traditional textile aesthetics into an interactive digital format.
-      </p>
+        <div>
+          <p>
+            This project reimagines Yunjin not as a static historical object, but as a
+            living digital material. Through CLO3D, Blender and Substance-based texture
+            development, traditional brocade aesthetics are transformed into an interactive
+            spatial experience.
+          </p>
+
+          <div class="process-tags">
+            <span>CLO3D garment</span>
+            <span>Blender refinement</span>
+            <span>Substance material</span>
+            <span>Digital heritage</span>
+            <span>Virtual textile archive</span>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 </body>
