@@ -73,12 +73,12 @@
 		{
 			"mimeType":"image/png",
 			"name":"repeatable_normal_hq",
-			"uri":"repeatable_normal_hq.png"
+			"uri": "textures/repeatable_normal_hq.png"
 		},
 		{
 			"mimeType":"image/png",
 			"name":"repeatable_color_rgb_hq",
-			"uri":"repeatable_color_rgb_hq.png"
+			"uri": "textures/repeatable_color_rgb_hq.png"
 		}
 	],
 	"accessors":[
