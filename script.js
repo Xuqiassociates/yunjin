@@ -378,14 +378,14 @@ function createFabricTexture() {
 
   const ctx = fabricCanvas.getContext("2d");
 
-  const bg = ctx.createLinearGradient(0, 0, 1024, 1024);
-  bg.addColorStop(0, "#3a1f1d");
-  bg.addColorStop(0.28, "#7a3430");
-  bg.addColorStop(0.58, "#2f4f67");
-  bg.addColorStop(1, "#1a1715");
+  // Soft misty fabric base — no red/blue gradient
+const bg = ctx.createLinearGradient(0, 0, 1024, 1024);
+bg.addColorStop(0, "rgba(245, 235, 218, 0.22)");
+bg.addColorStop(0.45, "rgba(230, 213, 188, 0.16)");
+bg.addColorStop(1, "rgba(255, 250, 240, 0.08)");
 
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, 1024, 1024);
+ctx.fillStyle = bg;
+ctx.fillRect(0, 0, 1024, 1024);
 
   const glow = ctx.createRadialGradient(520, 420, 40, 520, 420, 520);
   glow.addColorStop(0, "rgba(255, 229, 170, 0.30)");
