@@ -503,13 +503,19 @@ function updateTextByScroll(p) {
 }
 
 function updateSceneByScroll(p) {
+   // Opening starts as a blurred dream, then slowly becomes clearer
+const openingBlur = lerp(2.4, 0.2, smoothstep(0.05, 0.72, p));
+const openingSaturation = lerp(0.88, 1.08, smoothstep(0.18, 0.85, p));
+const openingContrast = lerp(0.9, 1.04, smoothstep(0.18, 0.85, p));
+
+canvas.style.filter = `blur(${openingBlur}px) saturate(${openingSaturation}) contrast(${openingContrast})`;
   const dreamFade = 1 - smoothstep(0.18, 0.58, p);
   const threadFade = smoothstep(0.26, 0.68, p);
   const fabricFade = smoothstep(0.70, 0.96, p);
 
   scene.background.copy(openingColor).lerp(laterColor, p * 0.65);
   scene.fog.color.copy(scene.background);
-  scene.fog.density = lerp(0.07, 0.022, p);
+  scene.fog.density = lerp(0.105, 0.022, p);
 
   targetCameraZ = lerp(3.15, 8.35, p);
   targetCameraY = lerp(0.72, 1.18, p);
@@ -519,7 +525,7 @@ function updateSceneByScroll(p) {
   dreamGroup.position.z = lerp(0, -1.35, p);
   dreamGroup.rotation.y = lerp(0, 0.42, p);
 
-  setObjectOpacity(loom, 0.78 * dreamFade);
+  setObjectOpacity(loom, 0.52 * dreamFade);
 
   threadGroup.rotation.z = lerp(-0.34, 0.015, p);
   threadGroup.rotation.y = lerp(-0.22, 0.04, p);
