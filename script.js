@@ -177,10 +177,10 @@ loader.load(
       }
     });
 
-    const result = prepareModelWrapper(model, 2.6);
+    const result = prepareModelWrapper(model, 4.2);
 
     loom = result.wrapper;
-    loom.position.set(0, -0.18, 0);
+    loom.position.set(0, -0.2, 1.2);
     loom.rotation.set(0.04, -0.35, 0);
 
     dreamGroup.add(loom);
@@ -581,7 +581,7 @@ function updateSceneByScroll(p) {
   const openingSaturation = lerp(0.9, 1.08, smoothstep(0.18, 0.85, p));
   const openingContrast = lerp(0.92, 1.04, smoothstep(0.18, 0.85, p));
 
-  canvas.style.filter = `blur(${openingBlur}px) saturate(${openingSaturation}) contrast(${openingContrast})`;
+  canvas.style.filter = "none";
 
   const dreamFade = 1 - smoothstep(0.24, 0.62, p);
   const threadFade = smoothstep(0.28, 0.68, p);
@@ -599,8 +599,8 @@ function updateSceneByScroll(p) {
   dreamGroup.position.z = lerp(0, -1.35, p);
   dreamGroup.rotation.y = lerp(0, 0.42, p);
 
-  setObjectOpacity(loom, 0.82 * dreamFade);
-  setObjectOpacity(dress, 0.45 * dreamFade);
+  setObjectOpacity(loom, 1);
+  setObjectOpacity(dress, 0);
 
   threadGroup.rotation.z = lerp(-0.34, 0.015, p);
   threadGroup.rotation.y = lerp(-0.22, 0.04, p);
@@ -612,15 +612,15 @@ function updateSceneByScroll(p) {
   );
 
   threadMaterials.forEach((material) => {
-    material.opacity = 0.015 + threadFade * 0.48;
-  });
+  material.opacity = 0;
+});
 
   mistMaterials.forEach((material, index) => {
     const variation = index % 3 === 0 ? 1.18 : 0.82;
     material.opacity = lerp(0.23 * variation, 0.028, p);
   });
 
-  fabricMaterial.opacity = fabricFade;
+  fabricMaterial.opacity = 0;
   fabric.scale.setScalar(lerp(0.58, 1.22, fabricFade));
   fabric.position.z = lerp(-2.1, -2.85, fabricFade);
   fabric.rotation.x = lerp(-0.11, -0.035, fabricFade);
