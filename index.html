@@ -9,7 +9,6 @@
 
   <link rel="stylesheet" href="styles.css" />
 
-  <!-- Three.js import map -->
   <script type="importmap">
     {
       "imports": {
@@ -24,59 +23,65 @@
 
   <main>
 
-    <!-- Opening Scene -->
     <section class="yunjin-opening" id="yunjin-opening">
       <canvas id="yunjin-canvas"></canvas>
 
-      <div class="opening-vignette"></div>
-      <div class="opening-noise"></div>
+      <div class="opening-ui">
+        <div class="opening-light"></div>
+        <div class="opening-vignette"></div>
+        <div class="opening-grain"></div>
 
-      <div class="opening-copy opening-copy-main">
-        <p class="eyebrow">A dream inside the brocade</p>
-        <h1>Yunjin Reverie</h1>
-        <p class="subtitle">A Fleeting Illusion</p>
-      </div>
+        <div class="loading" id="loading">
+          <span>Loading the loom</span>
+          <strong id="loading-percent">0%</strong>
+        </div>
 
-      <div class="opening-copy opening-copy-second">
-        <p class="eyebrow">Scroll to awaken</p>
-        <h2>From loom, mist and memory</h2>
-        <p>
-          The dream begins inside the fabric — where the loom, silk threads,
-          brocade surface and pavilion-like memories dissolve into one another.
-        </p>
-      </div>
+        <div class="opening-copy opening-copy-main is-visible">
+          <p class="eyebrow">A dream inside the brocade</p>
+          <h1>Yunjin Reverie</h1>
+          <p class="subtitle">A Fleeting Illusion</p>
+        </div>
 
-      <div class="opening-copy opening-copy-third">
-        <p class="eyebrow">Threads of the dream</p>
-        <h2>The world becomes silk</h2>
-        <p>
-          As the view slowly withdraws, the imagined space breaks apart into
-          floating lines, revealing the woven structure behind the illusion.
-        </p>
-      </div>
+        <div class="opening-copy opening-copy-second">
+          <p class="eyebrow">Inside the woven dream</p>
+          <h2>Loom, mist and memory</h2>
+          <p>
+            The dream begins within the brocade itself — where a Yunjin loom,
+            drifting fabric and architectural memories dissolve into a luminous haze.
+          </p>
+        </div>
 
-      <div class="opening-copy opening-copy-final">
-        <p class="eyebrow">The fabric revealed</p>
-        <h2>Awakening into Yunjin</h2>
-        <p>
-          What seemed like a dream is finally revealed as a brocade surface:
-          a digital textile world woven from memory, craft and illusion.
-        </p>
-      </div>
+        <div class="opening-copy opening-copy-third">
+          <p class="eyebrow">Threads appear</p>
+          <h2>The world becomes silk</h2>
+          <p>
+            As the view slowly withdraws, the imagined space breaks apart into
+            floating threads, revealing the structure hidden beneath the illusion.
+          </p>
+        </div>
 
-      <div class="scroll-hint">
-        <span>Scroll</span>
-        <div class="scroll-line"></div>
+        <div class="opening-copy opening-copy-final">
+          <p class="eyebrow">The fabric revealed</p>
+          <h2>Awakening into Yunjin</h2>
+          <p>
+            What seemed like a dream is finally revealed as a brocade surface:
+            a digital textile world woven from craft, memory and light.
+          </p>
+        </div>
+
+        <div class="scroll-hint">
+          <span>Scroll</span>
+          <div class="scroll-line"></div>
+        </div>
       </div>
     </section>
 
-    <!-- Temporary next section -->
     <section class="after-opening">
       <p class="eyebrow">Digital Textile Archive</p>
       <h2>Enter the brocade world</h2>
       <p>
         This section can later become your 3D dress gallery, fabric archive,
-        process research or virtual exhibition space.
+        research process, digital museum or virtual exhibition space.
       </p>
     </section>
 
@@ -85,4 +90,3 @@
   <script type="module" src="script.js"></script>
 </body>
 </html>
-
