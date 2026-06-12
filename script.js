@@ -194,7 +194,7 @@ loader.load(
     const result = prepareModelWrapper(model, 3.2);
 
     loom = result.wrapper;
-    loom.position.set(0, -0.2, 1.2);
+    loom.position.set(0, -0.1, 1.2);
     loom.rotation.set(0.04, -0.35, 0);
 
     dreamGroup.add(loom);
@@ -613,7 +613,7 @@ function updateSceneByScroll(p) {
   dreamGroup.position.z = lerp(0, -1.35, p);
   dreamGroup.rotation.y = lerp(0, 0.42, p);
 
-  setObjectOpacity(loom, 1);
+  setObjectOpacity(loom, 0.9);
   setObjectOpacity(dress, 0);
 
   threadGroup.rotation.z = lerp(-0.34, 0.015, p);
@@ -625,8 +625,8 @@ function updateSceneByScroll(p) {
     1
   );
 
-  threadMaterials.forEach((material) => {
-  material.opacity = 0;
+ threadMaterials.forEach((material) => {
+  material.opacity = 0.02 + threadFade * 0.35;
 });
 
   mistMaterials.forEach((material, index) => {
