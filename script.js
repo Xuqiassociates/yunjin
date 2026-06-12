@@ -278,7 +278,8 @@ for (let i = 0; i < 26; i++) {
 }
 
 /* =========================
-   Fabric Reveal
+   Fabric Terrain Reveal
+   Inspired by Three.js terrain + fog
 ========================= */
 
 function createFabricTexture() {
@@ -288,67 +289,117 @@ function createFabricTexture() {
 
   const ctx = fabricCanvas.getContext("2d");
 
+  // Warm brocade base
   const bg = ctx.createLinearGradient(0, 0, 1024, 1024);
-  bg.addColorStop(0, "#2a1716");
-  bg.addColorStop(0.32, "#6b2c2b");
-  bg.addColorStop(0.64, "#29435d");
-  bg.addColorStop(1, "#171417");
+  bg.addColorStop(0, "#3a1f1d");
+  bg.addColorStop(0.28, "#7a3430");
+  bg.addColorStop(0.58, "#2f4f67");
+  bg.addColorStop(1, "#1a1715");
 
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, 1024, 1024);
 
-  for (let x = 0; x < 1024; x += 9) {
-    ctx.strokeStyle =
-      x % 36 === 0
-        ? "rgba(236, 197, 106, 0.36)"
-        : "rgba(255, 233, 180, 0.08)";
+  // Soft luminous centre, like light falling on fabric
+  const glow = ctx.createRadialGradient(520, 420, 40, 520, 420, 520);
+  glow.addColorStop(0, "rgba(255, 229, 170, 0.30)");
+  glow.addColorStop(0.45, "rgba(220, 170, 95, 0.10)");
+  glow.addColorStop(1, "rgba(255, 255, 255, 0)");
 
-    ctx.lineWidth = x % 36 === 0 ? 1.2 : 0.45;
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, 1024, 1024);
+
+  // Vertical warp threads
+  for (let x = 0; x < 1024; x += 8) {
+    const strong = x % 40 === 0;
+
+    ctx.strokeStyle = strong
+      ? "rgba(238, 199, 112, 0.46)"
+      : "rgba(255, 235, 186, 0.09)";
+
+    ctx.lineWidth = strong ? 1.25 : 0.45;
 
     ctx.beginPath();
     ctx.moveTo(x, 0);
-    ctx.lineTo(x + Math.sin(x * 0.018) * 8, 1024);
+
+    for (let y = 0; y <= 1024; y += 32) {
+      const drift = Math.sin(y * 0.015 + x * 0.03) * 6;
+      ctx.lineTo(x + drift, y);
+    }
+
     ctx.stroke();
   }
 
-  for (let y = 0; y < 1024; y += 11) {
-    ctx.strokeStyle =
-      y % 44 === 0
-        ? "rgba(236, 197, 106, 0.24)"
-        : "rgba(255, 233, 180, 0.055)";
+  // Horizontal weft threads
+  for (let y = 0; y < 1024; y += 10) {
+    const strong = y % 50 === 0;
 
-    ctx.lineWidth = y % 44 === 0 ? 1 : 0.4;
+    ctx.strokeStyle = strong
+      ? "rgba(238, 199, 112, 0.30)"
+      : "rgba(255, 235, 186, 0.065)";
+
+    ctx.lineWidth = strong ? 1 : 0.4;
 
     ctx.beginPath();
     ctx.moveTo(0, y);
-    ctx.lineTo(1024, y + Math.cos(y * 0.016) * 7);
+
+    for (let x = 0; x <= 1024; x += 32) {
+      const drift = Math.cos(x * 0.014 + y * 0.025) * 5;
+      ctx.lineTo(x, y + drift);
+    }
+
     ctx.stroke();
   }
 
-  for (let i = 0; i < 24; i++) {
+  // Brocade cloud motifs
+  for (let i = 0; i < 26; i++) {
     const x = Math.random() * 1024;
     const y = Math.random() * 1024;
-    const r = 40 + Math.random() * 86;
+    const r = 34 + Math.random() * 90;
 
-    ctx.strokeStyle = "rgba(232, 190, 96, 0.24)";
+    ctx.strokeStyle = "rgba(236, 195, 105, 0.26)";
     ctx.lineWidth = 2;
 
     ctx.beginPath();
-    ctx.ellipse(x, y, r, r * 0.42, Math.random() * Math.PI, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.beginPath();
     ctx.ellipse(
-      x + r * 0.32,
-      y + r * 0.06,
-      r * 0.52,
-      r * 0.25,
+      x,
+      y,
+      r,
+      r * 0.38,
       Math.random() * Math.PI,
       0,
       Math.PI * 2
     );
     ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(
+      x + r * 0.35,
+      y + r * 0.08,
+      r * 0.52,
+      r * 0.22,
+      Math.random() * Math.PI,
+      0,
+      Math.PI * 2
+    );
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x - r * 0.25, y + r * 0.05, r * 0.2, 0, Math.PI * 1.5);
+    ctx.stroke();
   }
+
+  // Fine noise grain
+  const image = ctx.getImageData(0, 0, 1024, 1024);
+  const data = image.data;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const noise = Math.random() * 10 - 5;
+    data[i] += noise;
+    data[i + 1] += noise;
+    data[i + 2] += noise;
+  }
+
+  ctx.putImageData(image, 0, 0);
 
   const texture = new THREE.CanvasTexture(fabricCanvas);
   texture.colorSpace = THREE.SRGBColorSpace;
@@ -357,22 +408,63 @@ function createFabricTexture() {
   return texture;
 }
 
-const fabricTexture = createFabricTexture();
+function createFabricTerrainGeometry() {
+  const geometry = new THREE.PlaneGeometry(6.2, 3.75, 120, 76);
+  const positions = geometry.attributes.position;
 
-const fabricMaterial = new THREE.MeshBasicMaterial({
+  for (let i = 0; i < positions.count; i++) {
+    const x = positions.getX(i);
+    const y = positions.getY(i);
+
+    // Micro terrain: fabric waves + woven surface
+    const largeWave =
+      Math.sin(x * 2.1) * 0.045 +
+      Math.cos(y * 3.4) * 0.035;
+
+    const fineThreadWave =
+      Math.sin(x * 18.0) * 0.006 +
+      Math.cos(y * 22.0) * 0.005;
+
+    const diagonalMemory =
+      Math.sin((x + y) * 5.2) * 0.018;
+
+    const edgeSoftening =
+      1.0 -
+      Math.min(
+        0.55,
+        Math.abs(x) / 4.2 + Math.abs(y) / 3.2
+      );
+
+    const z =
+      (largeWave + fineThreadWave + diagonalMemory) *
+      edgeSoftening;
+
+    positions.setZ(i, z);
+  }
+
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
+const fabricTexture = createFabricTexture();
+const fabricGeometry = createFabricTerrainGeometry();
+
+const fabricMaterial = new THREE.MeshStandardMaterial({
   map: fabricTexture,
   transparent: true,
   opacity: 0,
-  depthWrite: false
+  roughness: 0.76,
+  metalness: 0.08,
+  side: THREE.DoubleSide
 });
 
-const fabric = new THREE.Mesh(
-  new THREE.PlaneGeometry(5.9, 3.55, 50, 50),
-  fabricMaterial
-);
+const fabric = new THREE.Mesh(fabricGeometry, fabricMaterial);
 
 fabric.position.set(0, 0, -2.25);
 fabric.scale.setScalar(0.58);
+
+// A very small tilt helps the fabric catch light
+fabric.rotation.x = -0.035;
 
 fabricGroup.add(fabric);
 
@@ -448,8 +540,11 @@ function updateSceneByScroll(p) {
   });
 
   fabricMaterial.opacity = fabricFade;
-  fabric.scale.setScalar(lerp(0.58, 1.18, fabricFade));
-  fabric.position.z = lerp(-2.2, -2.75, fabricFade);
+fabric.scale.setScalar(lerp(0.58, 1.22, fabricFade));
+fabric.position.z = lerp(-2.1, -2.85, fabricFade);
+
+// final stage: fabric becomes more calm and frontal
+fabric.rotation.x = lerp(-0.11, -0.035, fabricFade);
 }
 
 /* =========================
