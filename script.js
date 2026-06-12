@@ -191,7 +191,7 @@ loader.load(
       }
     });
 
-    const result = prepareModelWrapper(model, 4.2);
+    const result = prepareModelWrapper(model, 3.2);
 
     loom = result.wrapper;
     loom.position.set(0, -0.2, 1.2);
