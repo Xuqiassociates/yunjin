@@ -23,7 +23,7 @@ const openingColor = new THREE.Color("#e8e1d6");
 const laterColor = new THREE.Color("#d9cfc0");
 
 scene.background = openingColor.clone();
-scene.fog = new THREE.FogExp2("#e8e1d6", 0.06);
+scene.fog = new THREE.FogExp2("#e8e1d6", 0.055);
 
 const camera = new THREE.PerspectiveCamera(
   34,
@@ -32,7 +32,7 @@ const camera = new THREE.PerspectiveCamera(
   100
 );
 
-camera.position.set(0, 0.75, 3.25);
+camera.position.set(0, 0.72, 4.9);
 
 const renderer = new THREE.WebGLRenderer({
   canvas,
@@ -51,7 +51,7 @@ renderer.toneMappingExposure = 1.28;
    Lights
 ========================= */
 
-const ambientLight = new THREE.AmbientLight("#fff7ed", 1.45);
+const ambientLight = new THREE.AmbientLight("#fff7ed", 1.5);
 scene.add(ambientLight);
 
 const mainLight = new THREE.PointLight("#f4d6aa", 6.4, 18);
@@ -81,6 +81,7 @@ scene.add(mistGroup);
 scene.add(fabricGroup);
 
 let loom = null;
+let dress = null;
 
 /* =========================
    Helpers
@@ -116,6 +117,32 @@ function setObjectOpacity(object, opacity) {
   });
 }
 
+function prepareModelWrapper(model, targetSize = 2.4) {
+  const wrapper = new THREE.Group();
+  wrapper.add(model);
+
+  const box = new THREE.Box3().setFromObject(model);
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+
+  box.getSize(size);
+  box.getCenter(center);
+
+  model.position.set(-center.x, -center.y, -center.z);
+
+  const maxDimension = Math.max(size.x, size.y, size.z);
+  const scale = targetSize / maxDimension;
+
+  wrapper.scale.setScalar(scale);
+
+  return {
+    wrapper,
+    size,
+    center,
+    scale
+  };
+}
+
 /* =========================
    Load GLB Loom
 ========================= */
@@ -126,56 +153,46 @@ loader.load(
   "./assets/models/yunjin-loom-optimized.glb",
 
   (gltf) => {
-    loom = gltf.scene;
+    const model = gltf.scene;
 
-    // 先加入场景
-    dreamGroup.add(loom);
-
-    // 自动计算模型尺寸和中心点
-    const box = new THREE.Box3().setFromObject(loom);
-    const size = new THREE.Vector3();
-    const center = new THREE.Vector3();
-
-    box.getSize(size);
-    box.getCenter(center);
-
-    console.log("Loom size:", size);
-    console.log("Loom center:", center);
-
-    // 把模型中心移到画面中心
-    loom.position.set(-center.x, -center.y, -center.z);
-
-    // 自动缩放到合适大小
-    const maxDimension = Math.max(size.x, size.y, size.z);
-    const targetSize = 2.8;
-    const scale = targetSize / maxDimension;
-
-    loom.scale.setScalar(scale);
-
-    // 稍微下移一点
-    loom.position.y -= 0.35;
-
-    // 给一点角度
-    loom.rotation.set(0.04, -0.35, 0);
-
-    // 暂时让模型清楚显示，不要太透明
-    loom.traverse((child) => {
+    model.traverse((child) => {
       if (child.isMesh && child.material) {
         child.material = child.material.clone();
-        child.material.transparent = false;
-        child.material.opacity = 1;
+        child.material.side = THREE.DoubleSide;
+        child.material.transparent = true;
+        child.material.opacity = 0.9;
         child.material.depthWrite = true;
+
+        if (child.material.map) {
+          child.material.map.colorSpace = THREE.SRGBColorSpace;
+        }
+
+        if ("roughness" in child.material) {
+          child.material.roughness = 0.82;
+        }
+
+        if ("metalness" in child.material) {
+          child.material.metalness = 0.04;
+        }
       }
     });
 
-    // 暂时把雾气调淡，方便检查
-    scene.fog.density = 0.018;
+    const result = prepareModelWrapper(model, 2.6);
+
+    loom = result.wrapper;
+    loom.position.set(0, -0.18, 0);
+    loom.rotation.set(0.04, -0.35, 0);
+
+    dreamGroup.add(loom);
 
     if (loading) {
       loading.classList.add("is-hidden");
     }
 
     console.log("Yunjin loom loaded and centered.");
+    console.log("Loom size:", result.size);
+    console.log("Loom center:", result.center);
+    console.log("Loom scale:", result.scale);
   },
 
   (xhr) => {
@@ -193,51 +210,56 @@ loader.load(
     }
   }
 );
+
+/* =========================
+   Optional Dress Model
+   Your current dress file is in the root folder:
+   yunjin-dress-test.gltf
+========================= */
+
+loader.load(
+  "./yunjin-dress-test.gltf",
+
   (gltf) => {
-    loom = gltf.scene;
+    const model = gltf.scene;
 
-    loom.position.set(0, -0.72, 0);
-    loom.rotation.set(0.04, -0.36, 0);
-    loom.scale.set(1.5, 1.5, 1.5);
-
-    loom.traverse((child) => {
+    model.traverse((child) => {
       if (child.isMesh && child.material) {
         child.material = child.material.clone();
+        child.material.side = THREE.DoubleSide;
         child.material.transparent = true;
-        child.material.opacity = 0.78;
+        child.material.opacity = 0.55;
+        child.material.depthWrite = true;
+
+        if (child.material.map) {
+          child.material.map.colorSpace = THREE.SRGBColorSpace;
+        }
 
         if ("roughness" in child.material) {
           child.material.roughness = 0.86;
         }
 
         if ("metalness" in child.material) {
-          child.material.metalness = 0.03;
+          child.material.metalness = 0.05;
         }
       }
     });
 
-    dreamGroup.add(loom);
+    const result = prepareModelWrapper(model, 1.45);
 
-    if (loading) {
-      loading.classList.add("is-hidden");
-    }
+    dress = result.wrapper;
+    dress.position.set(1.18, -0.1, 0.25);
+    dress.rotation.set(0.03, -0.25, 0);
 
-    console.log("Yunjin loom loaded.");
+    dreamGroup.add(dress);
+
+    console.log("Yunjin dress loaded.");
   },
 
-  (xhr) => {
-    if (xhr.total && loadingPercent) {
-      const percent = Math.round((xhr.loaded / xhr.total) * 100);
-      loadingPercent.textContent = `${percent}%`;
-    }
-  },
+  undefined,
 
   (error) => {
-    console.error("GLB loading error:", error);
-
-    if (loading) {
-      loading.querySelector("span").textContent = "Loom loading failed";
-    }
+    console.warn("Dress model not loaded. This is okay if you are not using the dress yet.", error);
   }
 );
 
@@ -347,7 +369,6 @@ for (let i = 0; i < 26; i++) {
 
 /* =========================
    Fabric Terrain Reveal
-   Inspired by Three.js terrain + fog
 ========================= */
 
 function createFabricTexture() {
@@ -357,7 +378,6 @@ function createFabricTexture() {
 
   const ctx = fabricCanvas.getContext("2d");
 
-  // Warm brocade base
   const bg = ctx.createLinearGradient(0, 0, 1024, 1024);
   bg.addColorStop(0, "#3a1f1d");
   bg.addColorStop(0.28, "#7a3430");
@@ -367,7 +387,6 @@ function createFabricTexture() {
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, 1024, 1024);
 
-  // Soft luminous centre, like light falling on fabric
   const glow = ctx.createRadialGradient(520, 420, 40, 520, 420, 520);
   glow.addColorStop(0, "rgba(255, 229, 170, 0.30)");
   glow.addColorStop(0.45, "rgba(220, 170, 95, 0.10)");
@@ -376,7 +395,6 @@ function createFabricTexture() {
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, 1024, 1024);
 
-  // Vertical warp threads
   for (let x = 0; x < 1024; x += 8) {
     const strong = x % 40 === 0;
 
@@ -397,7 +415,6 @@ function createFabricTexture() {
     ctx.stroke();
   }
 
-  // Horizontal weft threads
   for (let y = 0; y < 1024; y += 10) {
     const strong = y % 50 === 0;
 
@@ -418,7 +435,6 @@ function createFabricTexture() {
     ctx.stroke();
   }
 
-  // Brocade cloud motifs
   for (let i = 0; i < 26; i++) {
     const x = Math.random() * 1024;
     const y = Math.random() * 1024;
@@ -456,7 +472,6 @@ function createFabricTexture() {
     ctx.stroke();
   }
 
-  // Fine noise grain
   const image = ctx.getImageData(0, 0, 1024, 1024);
   const data = image.data;
 
@@ -484,7 +499,6 @@ function createFabricTerrainGeometry() {
     const x = positions.getX(i);
     const y = positions.getY(i);
 
-    // Micro terrain: fabric waves + woven surface
     const largeWave =
       Math.sin(x * 2.1) * 0.045 +
       Math.cos(y * 3.4) * 0.035;
@@ -530,8 +544,6 @@ const fabric = new THREE.Mesh(fabricGeometry, fabricMaterial);
 
 fabric.position.set(0, 0, -2.25);
 fabric.scale.setScalar(0.58);
-
-// A very small tilt helps the fabric catch light
 fabric.rotation.x = -0.035;
 
 fabricGroup.add(fabric);
@@ -542,11 +554,11 @@ fabricGroup.add(fabric);
 
 let scrollProgress = 0;
 
-let targetCameraZ = 3.25;
-let targetCameraY = 0.75;
+let targetCameraZ = 4.9;
+let targetCameraY = 0.72;
 
-let currentCameraZ = 3.25;
-let currentCameraY = 0.75;
+let currentCameraZ = 4.9;
+let currentCameraY = 0.72;
 
 function updateScrollProgress() {
   const sectionTop = openingSection.offsetTop;
@@ -571,29 +583,30 @@ function updateTextByScroll(p) {
 }
 
 function updateSceneByScroll(p) {
-   // Opening starts as a blurred dream, then slowly becomes clearer
-const openingBlur = lerp(2.4, 0.2, smoothstep(0.05, 0.72, p));
-const openingSaturation = lerp(0.88, 1.08, smoothstep(0.18, 0.85, p));
-const openingContrast = lerp(0.9, 1.04, smoothstep(0.18, 0.85, p));
+  const openingBlur = lerp(1.8, 0.15, smoothstep(0.05, 0.72, p));
+  const openingSaturation = lerp(0.9, 1.08, smoothstep(0.18, 0.85, p));
+  const openingContrast = lerp(0.92, 1.04, smoothstep(0.18, 0.85, p));
 
-canvas.style.filter = `blur(${openingBlur}px) saturate(${openingSaturation}) contrast(${openingContrast})`;
-  const dreamFade = 1 - smoothstep(0.18, 0.58, p);
-  const threadFade = smoothstep(0.26, 0.68, p);
+  canvas.style.filter = `blur(${openingBlur}px) saturate(${openingSaturation}) contrast(${openingContrast})`;
+
+  const dreamFade = 1 - smoothstep(0.24, 0.62, p);
+  const threadFade = smoothstep(0.28, 0.68, p);
   const fabricFade = smoothstep(0.70, 0.96, p);
 
   scene.background.copy(openingColor).lerp(laterColor, p * 0.65);
   scene.fog.color.copy(scene.background);
-  scene.fog.density = lerp(0.105, 0.022, p);
+  scene.fog.density = lerp(0.068, 0.022, p);
 
-  targetCameraZ = lerp(3.15, 8.35, p);
+  targetCameraZ = lerp(4.9, 8.4, p);
   targetCameraY = lerp(0.72, 1.18, p);
 
-  dreamGroup.scale.setScalar(lerp(1.55, 0.5, p));
-  dreamGroup.position.y = lerp(-0.08, -0.32, p);
+  dreamGroup.scale.setScalar(lerp(1.05, 0.5, p));
+  dreamGroup.position.y = lerp(-0.05, -0.32, p);
   dreamGroup.position.z = lerp(0, -1.35, p);
   dreamGroup.rotation.y = lerp(0, 0.42, p);
 
-  setObjectOpacity(loom, 1 * dreamFade);
+  setObjectOpacity(loom, 0.82 * dreamFade);
+  setObjectOpacity(dress, 0.45 * dreamFade);
 
   threadGroup.rotation.z = lerp(-0.34, 0.015, p);
   threadGroup.rotation.y = lerp(-0.22, 0.04, p);
@@ -614,11 +627,9 @@ canvas.style.filter = `blur(${openingBlur}px) saturate(${openingSaturation}) con
   });
 
   fabricMaterial.opacity = fabricFade;
-fabric.scale.setScalar(lerp(0.58, 1.22, fabricFade));
-fabric.position.z = lerp(-2.1, -2.85, fabricFade);
-
-// final stage: fabric becomes more calm and frontal
-fabric.rotation.x = lerp(-0.11, -0.035, fabricFade);
+  fabric.scale.setScalar(lerp(0.58, 1.22, fabricFade));
+  fabric.position.z = lerp(-2.1, -2.85, fabricFade);
+  fabric.rotation.x = lerp(-0.11, -0.035, fabricFade);
 }
 
 /* =========================
@@ -642,6 +653,11 @@ function animate() {
   if (loom) {
     loom.rotation.y += 0.001;
     loom.position.y += Math.sin(elapsed * 0.55) * 0.00075;
+  }
+
+  if (dress) {
+    dress.rotation.y += 0.0013;
+    dress.position.y += Math.sin(elapsed * 0.5 + 1.5) * 0.00065;
   }
 
   threadGroup.children.forEach((thread, index) => {
