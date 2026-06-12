@@ -128,6 +128,74 @@ loader.load(
   (gltf) => {
     loom = gltf.scene;
 
+    // 先加入场景
+    dreamGroup.add(loom);
+
+    // 自动计算模型尺寸和中心点
+    const box = new THREE.Box3().setFromObject(loom);
+    const size = new THREE.Vector3();
+    const center = new THREE.Vector3();
+
+    box.getSize(size);
+    box.getCenter(center);
+
+    console.log("Loom size:", size);
+    console.log("Loom center:", center);
+
+    // 把模型中心移到画面中心
+    loom.position.set(-center.x, -center.y, -center.z);
+
+    // 自动缩放到合适大小
+    const maxDimension = Math.max(size.x, size.y, size.z);
+    const targetSize = 2.8;
+    const scale = targetSize / maxDimension;
+
+    loom.scale.setScalar(scale);
+
+    // 稍微下移一点
+    loom.position.y -= 0.35;
+
+    // 给一点角度
+    loom.rotation.set(0.04, -0.35, 0);
+
+    // 暂时让模型清楚显示，不要太透明
+    loom.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material = child.material.clone();
+        child.material.transparent = false;
+        child.material.opacity = 1;
+        child.material.depthWrite = true;
+      }
+    });
+
+    // 暂时把雾气调淡，方便检查
+    scene.fog.density = 0.018;
+
+    if (loading) {
+      loading.classList.add("is-hidden");
+    }
+
+    console.log("Yunjin loom loaded and centered.");
+  },
+
+  (xhr) => {
+    if (xhr.total && loadingPercent) {
+      const percent = Math.round((xhr.loaded / xhr.total) * 100);
+      loadingPercent.textContent = `${percent}%`;
+    }
+  },
+
+  (error) => {
+    console.error("GLB loading error:", error);
+
+    if (loading) {
+      loading.querySelector("span").textContent = "Loom loading failed";
+    }
+  }
+);
+  (gltf) => {
+    loom = gltf.scene;
+
     loom.position.set(0, -0.72, 0);
     loom.rotation.set(0.04, -0.36, 0);
     loom.scale.set(1.5, 1.5, 1.5);
@@ -525,7 +593,7 @@ canvas.style.filter = `blur(${openingBlur}px) saturate(${openingSaturation}) con
   dreamGroup.position.z = lerp(0, -1.35, p);
   dreamGroup.rotation.y = lerp(0, 0.42, p);
 
-  setObjectOpacity(loom, 0.52 * dreamFade);
+  setObjectOpacity(loom, 1 * dreamFade);
 
   threadGroup.rotation.z = lerp(-0.34, 0.015, p);
   threadGroup.rotation.y = lerp(-0.22, 0.04, p);
