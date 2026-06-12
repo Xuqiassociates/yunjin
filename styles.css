@@ -37,6 +37,8 @@ body {
   width: 100%;
   height: 100vh;
   display: block;
+  filter: blur(2.2px) saturate(0.92) contrast(0.92);
+  transition: filter 0.6s ease;
 }
 
 .opening-ui {
@@ -86,93 +88,88 @@ body {
 }
 
 /* =========================
-   Text
+   Text — small museum label style
 ========================= */
 
 .opening-copy {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: clamp(22px, 4vw, 64px);
+  bottom: clamp(36px, 7vh, 76px);
+  top: auto;
   z-index: 5;
-  width: min(86vw, 980px);
-  text-align: center;
+
+  width: min(360px, 82vw);
+  text-align: left;
+
   opacity: 0;
-  transform: translate(-50%, -43%);
+  transform: translateY(10px);
   transition:
-    opacity 0.7s ease,
-    transform 0.7s ease,
-    filter 0.7s ease;
-  filter: blur(8px);
+    opacity 0.8s ease,
+    transform 0.8s ease,
+    filter 0.8s ease;
+
+  filter: blur(6px);
 }
 
 .opening-copy.is-visible {
   opacity: 1;
-  transform: translate(-50%, -50%);
+  transform: translateY(0);
   filter: blur(0);
 }
 
 .eyebrow {
-  margin-bottom: 1rem;
-  font-size: clamp(0.68rem, 1vw, 0.82rem);
-  letter-spacing: 0.24em;
+  margin-bottom: 0.65rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(124, 92, 58, 0.76);
+  color: rgba(96, 75, 58, 0.56);
 }
 
-.opening-copy h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(3.6rem, 11vw, 10rem);
-  font-weight: 300;
-  line-height: 0.88;
-  letter-spacing: -0.075em;
-  color: #1e1712;
-  text-shadow:
-    0 0 28px rgba(255, 248, 236, 0.45),
-    0 12px 60px rgba(95, 75, 55, 0.16);
-}
-
+.opening-copy h1,
 .opening-copy h2 {
-  max-width: 920px;
-  margin: 0 auto;
+  max-width: 360px;
+  margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.8rem, 7vw, 7.6rem);
+  font-size: clamp(1.05rem, 1.6vw, 1.45rem);
   font-weight: 300;
-  line-height: 0.92;
-  letter-spacing: -0.065em;
-  color: #201813;
-  text-shadow:
-    0 0 28px rgba(255, 248, 236, 0.38),
-    0 10px 54px rgba(95, 75, 55, 0.14);
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+  color: rgba(35, 27, 22, 0.78);
+  text-shadow: 0 0 20px rgba(255, 250, 240, 0.48);
 }
 
 .subtitle,
 .opening-copy p:not(.eyebrow) {
-  margin: 1.25rem auto 0;
-  max-width: 620px;
-  font-size: clamp(0.95rem, 1.3vw, 1.14rem);
-  line-height: 1.8;
-  color: rgba(52, 39, 31, 0.72);
+  margin-top: 0.7rem;
+  max-width: 340px;
+  font-size: clamp(0.68rem, 0.9vw, 0.78rem);
+  line-height: 1.75;
+  color: rgba(52, 39, 31, 0.56);
 }
 
 .scroll-hint {
   position: absolute;
-  right: clamp(24px, 5vw, 80px);
-  bottom: 48px;
+  left: clamp(22px, 4vw, 64px);
+  bottom: 22px;
+  right: auto;
   z-index: 6;
+
   display: flex;
   align-items: center;
-  gap: 14px;
-  color: rgba(80, 62, 49, 0.58);
-  font-size: 0.75rem;
+  gap: 12px;
+
+  color: rgba(80, 62, 49, 0.38);
+  font-size: 0.58rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+
   transition: opacity 0.5s ease;
 }
 
 .scroll-line {
-  width: 56px;
+  width: 42px;
   height: 1px;
-  background: linear-gradient(90deg, rgba(164, 129, 91, 0.9), transparent);
+  background: linear-gradient(90deg, rgba(120, 92, 66, 0.46), transparent);
   animation: linePulse 1.8s ease-in-out infinite;
 }
 
