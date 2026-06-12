@@ -128,11 +128,25 @@ function prepareModelWrapper(model, targetSize = 2.4) {
   box.getSize(size);
   box.getCenter(center);
 
-  model.position.set(-center.x, -center.y, -center.z);
+  console.log("Model size:", size);
+  console.log("Model center:", center);
 
   const maxDimension = Math.max(size.x, size.y, size.z);
-  const scale = targetSize / maxDimension;
 
+  if (!maxDimension || maxDimension === 0 || !Number.isFinite(maxDimension)) {
+    console.warn("Model has zero size. It may be empty, hidden, or exported incorrectly.");
+    wrapper.scale.setScalar(1);
+    return {
+      wrapper,
+      size,
+      center,
+      scale: 1
+    };
+  }
+
+  model.position.set(-center.x, -center.y, -center.z);
+
+  const scale = targetSize / maxDimension;
   wrapper.scale.setScalar(scale);
 
   return {
